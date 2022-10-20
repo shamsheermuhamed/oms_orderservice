@@ -1,30 +1,21 @@
-package com.shopping.model;
+package com.shopping.request;
 
 import java.util.List;
 
-import javax.persistence.Id;
+import com.shopping.model.Product;
+import com.shopping.model.User;
 
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
+public class OrderRequest {
 
-@Document(collection = "orders")
-public class Order {
-
-	@Id
-	@Indexed(unique=true)
 	private String id;
 	
-	
-	@DBRef
 	private User user;
 	  
-	@DBRef
 	private List<Product> productList;
 	
 	private Integer orderPrice;
 	  
-	public Order() {
+	public OrderRequest() {
 		super();
 	}
 
@@ -59,4 +50,5 @@ public class Order {
 	public void setOrderPrice(Integer orderPrice) {
 		this.orderPrice = orderPrice;
 	}
+
 }

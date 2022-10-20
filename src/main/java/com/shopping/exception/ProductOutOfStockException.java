@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class ProductOutOfStockException extends RuntimeException {
 		
+		
 		@ExceptionHandler
 		public ResponseEntity<Object> exception(ProductOutOfStockException ex)
 		{

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 
 import com.shopping.model.Product;
+import com.shopping.request.ProductRequest;
 
 public interface ProductService {
 
@@ -12,10 +13,12 @@ public interface ProductService {
 
 	List<Product> getDeatilsByProductName(String productName);
 
-	ResponseEntity<Object> addNewProduct(Product product);
+	ResponseEntity<Object> addNewProduct(ProductRequest product);
 
-	ResponseEntity<Object> updateProductDetailsById(String productId, Product product);
+	ResponseEntity<Object> updateProductDetailsById(String productId, ProductRequest product);
 
 	ResponseEntity<Object> deleteProductDetailsById(String productId);
+
+	Product getDeatilsByProductId(String productId);
 
 }

@@ -35,7 +35,7 @@ import com.shopping.request.SignupRequest;
 import com.shopping.security.JwtUtils;
 import com.shopping.security.UserDetailsImpl;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -129,7 +129,7 @@ public class AuthController {
 	public ResponseEntity<Object> forgotPassword(@RequestBody LoginRequest loginRequest){
 		if (userRepository.existsByUsername(loginRequest.getUsername())) {
 			User user= userRepository.findByUsername(loginRequest.getUsername()).get();
-			user.setPassword(loginRequest.getPassword());
+			user.setPassword(encoder.encode(loginRequest.getPassword()));
 			userRepository.save(user);
 			return ResponseEntity.ok(new MessageResponse("Password updated successfully!"));
 		}

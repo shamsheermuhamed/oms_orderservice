@@ -7,6 +7,6 @@ import com.shopping.model.Order;
 
 public interface OrderRepository extends MongoRepository<Order, String> {
 
-	List<Order> findByProduct(String productId);
+	List<Order> findByUser(String userId);
 
 }

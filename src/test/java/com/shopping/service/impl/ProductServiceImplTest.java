@@ -16,6 +16,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.shopping.model.Product;
 import com.shopping.repository.ProductRepository;
+import com.shopping.request.ProductRequest;
 
 @ExtendWith(SpringExtension.class)
 public class ProductServiceImplTest {
@@ -52,13 +53,13 @@ public class ProductServiceImplTest {
 	
 	@Test
 	void testaddNewProduct() {
-		Product product=new Product();
-		product.setId("123");
-		product.setProductName("football");
-		product.setActive(true);
-		assertNotNull(productServiceImpl.addNewProduct(product));
+		ProductRequest productRequest=new ProductRequest();
+		productRequest.setId("123");
+		productRequest.setProductName("football");
+		productRequest.setActive(true);
+		assertNotNull(productServiceImpl.addNewProduct(productRequest));
 		assertDoesNotThrow(()->{
-			productServiceImpl.addNewProduct(product);
+			productServiceImpl.addNewProduct(productRequest);
 		});
 	}
 }

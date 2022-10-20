@@ -21,6 +21,7 @@ import com.shopping.repository.OrderRepository;
 import com.shopping.repository.ProductRepository;
 import com.shopping.repository.UserRepository;
 import com.shopping.request.MessageResponse;
+import com.shopping.request.OrderRequest;
 import com.shopping.request.OrderResponse;
 import com.shopping.service.OrderService;
 
@@ -44,26 +45,33 @@ public class OrderServiceImpl implements OrderService {
 	private KafkaTemplate<String, Object> template;
 	
 	@Override
-	public ResponseEntity<Object> createOrder(Order order) {
+	public ResponseEntity<Object> createOrder(OrderRequest orderrequest) {
 		logger.info("Entering into service-createOrder");
-		Optional<Product> productOptional= productRepository.findById(order.getProduct().getId());
+		Order order=new Order();
+		order.setProductList(orderrequest.getProductList());
+		order.setUser(orderrequest.getUser());
+		order.setOrderPrice(orderrequest.getOrderPrice());
 		if((userRepository.findById(order.getUser().getId())).isEmpty()){
 			throw new UserNotFoundException();
-		}		
-		else if(productRepository.findById(order.getProduct().getId()).isEmpty()){
-			throw new ProductNotFoundException();
+		}	
+		for(Product product: orderrequest.getProductList()) {
+			Optional<Product> productOptional= productRepository.findById(product.getId());
+			if(productRepository.findById(product.getId()).isEmpty()){
+				throw new ProductNotFoundException();
+			}
+			else if(productOptional.get().getUnitStock()==null || productOptional.get().getUnitStock()<= 0 ) {
+				throw new ProductOutOfStockException();
+			}
+			else {
+				Product getproduct= productOptional.get();
+				product.setUnitStock(getproduct.getUnitStock()-1);	
+				productRepository.save(getproduct);
+			}
 		}
-		else if(productOptional.get().getUnitStock()==null || productOptional.get().getUnitStock()<= 0 ) {
-			throw new ProductOutOfStockException();
-		}
-		else {
-			orderRepository.save(order);
-			Product product= productOptional.get();
-			product.setUnitStock(product.getUnitStock()-1);	
-			productRepository.save(product);
-//			template.send(topic,orderRepository.findById(orderRepository.save(order).getId()));
-			return  ResponseEntity.ok(new MessageResponse("Order created successfully"));
-		}
+		
+		orderRepository.save(order);
+//		template.send(topic,orderRepository.findById(orderRepository.save(order).getId()));
+		return  ResponseEntity.ok(new MessageResponse("Order created successfully"));
 	}
 
 	@Override
@@ -78,7 +86,7 @@ public class OrderServiceImpl implements OrderService {
 					orderResponse.setOrderId(order.getId());
 					orderResponse.setUserName(order.getUser().getUsername());
 					orderResponse.setEmail(order.getUser().getEmail());
-					orderResponse.setProduct(order.getProduct());
+					orderResponse.setProductList(order.getProductList());
 					orderResponseList.add(orderResponse);
 				}
 			}
@@ -96,7 +104,33 @@ public class OrderServiceImpl implements OrderService {
 	public List<OrderResponse> getOrdersForProduct(String productId) {
 		logger.info("Entering into getOrdersForProduct");
 		List<OrderResponse> orderResponseList= new ArrayList<>();
-		List<Order> orderList= orderRepository.findByProduct(productId);
+//		List<Order> orderList= orderRepository.findByProductList(productId);
+//		try {
+//			if(!orderList.isEmpty()) {
+//				for(Order order: orderList) {
+//					OrderResponse orderResponse= new OrderResponse();
+//					orderResponse.setOrderId(order.getId());
+//					orderResponse.setUserName(order.getUser().getUsername());
+//					orderResponse.setEmail(order.getUser().getEmail());
+//					orderResponse.setProduct(order.getProductList());
+//					orderResponseList.add(orderResponse);
+//				}
+//			}
+//			else {
+//				throw new RecordNotFoundException();
+//			}
+//		} catch(Exception e) {
+//			throw new RecordNotFoundException();
+//		}
+		
+		return orderResponseList;
+	}
+
+	@Override
+	public List<OrderResponse> getOrdersByuser(String userId) {
+		logger.info("Entering into service-getAllOrders");
+		List<OrderResponse> orderResponseList= new ArrayList<>();
+		List<Order> orderList= orderRepository.findByUser(userId);
 		try {
 			if(!orderList.isEmpty()) {
 				for(Order order: orderList) {
@@ -104,7 +138,8 @@ public class OrderServiceImpl implements OrderService {
 					orderResponse.setOrderId(order.getId());
 					orderResponse.setUserName(order.getUser().getUsername());
 					orderResponse.setEmail(order.getUser().getEmail());
-					orderResponse.setProduct(order.getProduct());
+					orderResponse.setProductList(order.getProductList());
+					orderResponse.setOrderPrice(order.getOrderPrice());
 					orderResponseList.add(orderResponse);
 				}
 			}

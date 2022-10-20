@@ -1,17 +1,9 @@
-package com.shopping.model;
+package com.shopping.request;
 
 import java.util.List;
 
-import javax.persistence.Id;
+public class ProductRequest {
 
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-
-@Document(collection = "products")
-public class Product {
-	
-	@Id
-	@Indexed(unique=true)
 	private String id;
 	private String productName;
 	private String description;
@@ -20,11 +12,9 @@ public class Product {
 	private boolean active;
 	private Integer unitStock;
 	private String imageUrl;
-	
-	public Product() {
+	public ProductRequest() {
 	}
-
-	public Product(String productName, String description, double price, List<String> features, boolean active,
+	public ProductRequest(String productName, String description, double price, List<String> features, boolean active,
 			Integer unitStock, String imageUrl) {
 		super();
 		this.productName = productName;
@@ -35,69 +25,53 @@ public class Product {
 		this.unitStock = unitStock;
 		this.imageUrl = imageUrl;
 	}
-
 	public String getId() {
 		return id;
 	}
-
 	public void setId(String id) {
 		this.id = id;
 	}
-
 	public String getProductName() {
 		return productName;
 	}
-
 	public void setProductName(String productName) {
 		this.productName = productName;
 	}
-
 	public String getDescription() {
 		return description;
 	}
-
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
 	public double getPrice() {
 		return price;
 	}
-
 	public void setPrice(double price) {
 		this.price = price;
 	}
-
 	public List<String> getFeatures() {
 		return features;
 	}
-
 	public void setFeatures(List<String> features) {
 		this.features = features;
 	}
-
 	public boolean getActive() {
 		return active;
 	}
-
 	public void setActive(boolean active) {
 		this.active = active;
 	}
-
 	public Integer getUnitStock() {
 		return unitStock;
 	}
-
 	public void setUnitStock(Integer unitStock) {
 		this.unitStock = unitStock;
 	}
-
 	public String getImageUrl() {
 		return imageUrl;
 	}
-
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
 	}
-
+	
 }
