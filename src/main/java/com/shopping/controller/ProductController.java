@@ -60,4 +60,12 @@ public class ProductController {
 	public ResponseEntity<Object> deleteProductDetails(@PathVariable String productId) {
 		return productService.deleteProductDetailsById(productId);
 	}
+	
+	//added for testing
+	@GetMapping("/product/getbyid/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<Object> gProductById() {
+		return null;
+		// return productService.getProduct(product);
+	}	
 }
