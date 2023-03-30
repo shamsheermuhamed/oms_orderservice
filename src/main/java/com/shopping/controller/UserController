@@ -49,18 +49,26 @@ public class OrderController {
 		return orderService.getUserById(userId);
 	}
 	
-  @DeleteMapping
-  @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<Object> deleteAllUsers(){
-    return null;
-  }
+	  @DeleteMapping
+	  @PreAuthorize("hasRole('ADMIN')")
+	  public ResponseEntity<Object> deleteAllUsers(){
+	    return userService.deleteAllUsers();
+	  }
   
-  @DeleteMapping
-  @PreAuthorize
-  public ResponseEntity<Object> deleteUserById(@PathVariable Strig userId){
-  
-  
-  
+	  @DeleteMapping
+	  @PreAuthorize("hasRole('ADMIN')")
+	  public ResponseEntity<Object> deleteUserById(@PathVariable Strig userId){
+	  	return userService.deleteUserById(userId);
+	  }
+	  
+	  @PutMapping
+	  @PreAuthorize("hasRole('USER')")
+	  public ResponseEntity<Object> updateByUserId(@RequestBody User user){
+	  	return userService.updateUserById(user);
+	  }
+
+
+
     
   
 }
