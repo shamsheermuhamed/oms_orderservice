@@ -31,10 +31,10 @@ public class OrderController {
 	@Autowired
 	OrderRepository orderRepo;
 	
-	@PostMapping("/craeteuser")
+	@PostMapping("/adduser")
 	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<Object> createUser(@RequestBody UserRequest user) {
-		return userService.createUser(user);
+		return userService.addUser(user);
 	}	
 	
 	@GetMapping("/getAllUsers")
